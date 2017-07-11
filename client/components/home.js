@@ -62,7 +62,7 @@ export default class Home extends React.Component {
           <div className="row">
             <div className="col-xs-7">
               <iframe
-              src="http://player.twitch.tv/?channel=savjz&muted=true"
+              src="https://player.twitch.tv/?channel=savjz&muted=true"
               height="360"
               width="640"
               frameBorder="0"
