@@ -5,8 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server",
-    "webpack": "webpack",
-    "postinstall": "npm install && npm run webpack"
+    "webpack": "webpack"
   },
   "author": "Shree",
   "license": "MIT",
