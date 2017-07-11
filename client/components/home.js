@@ -60,7 +60,7 @@ export default class Home extends React.Component {
       <div className="container">
         {!this.state.user.id ? <h1>Please Login</h1> :
           <div className="row">
-            <div className="col-xs-7">
+            <div style={styleCenter}>
               <iframe
               src="https://player.twitch.tv/?channel=savjz&muted=true"
               height="360"
@@ -69,22 +69,22 @@ export default class Home extends React.Component {
               scrolling="no"
               allowFullScreen />
             </div>
-            <div className="col-xs-5">
-              <div className="well">
-                <h4 style={{display:"flex", justifyContent:"center"}}>Chat Window</h4>
-                {this.state.chat.map((item,idx) => (<div key={idx}>{item[0]}: {item[1]}</div>))}
-              </div>
-
-              <form id="messageForm" onSubmit={this.handleSubmit}>
-                <div className="form-group">
-                  <textarea className="form-control" value={this.state.message} onChange={this.handleChange} />
-                  <input className="col-centered btn btn-primary" style={{margin:"4px"}} type="submit" value="Submit" />
-                </div>
-              </form>
+            <div style={styleCenter}>
+              <iframe frameborder="0"
+              scrolling="yes"
+              id="chat_embed"
+              src="https://www.twitch.tv/savjz/chat"
+              height="360"
+              width="640" />
             </div>
           </div>
         }
       </div>
     );
   }
+}
+
+var styleCenter = {
+  display: "flex",
+  justifyContent: "center"
 }
