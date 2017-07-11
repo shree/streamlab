@@ -17,5 +17,15 @@ module.exports = {
       }
     }]
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        // This tells the Webpack and Babel for optimization for performance
+        NODE_ENV: JSON.stringify('production')
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(), // Makes sure Webpack will not compile if Errors
+  ],
   watch: process.env.NODE_ENV!=="production"
 };
