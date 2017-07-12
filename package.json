@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node server/server",
     "webpack": "webpack",
-
     "prod": "NODE_ENV=production node server/server.js",
     "build": "webpack --config webpack.config.js -p --progress --colors",
     "postinstall": "webpack --config webpack.config.js -p --progress --colors"
@@ -33,6 +32,7 @@
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.1.1",
     "socket.io": "^2.0.3",
+    "tmi.js": "^1.2.1",
     "webpack": "^3.1.0"
   }
 }

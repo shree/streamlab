@@ -17,7 +17,7 @@ router.get('/checkLogin', function(req,res) {
 
 //Save messages to database
 router.post('/saveMessages', function(req,res){
-  var promise = User.findOne({ id: req.user.id }).exec();
+  var promise = User.findOne({ name: req.user.name }).exec();
   promise.then(function(user){
     if(req.body.message) {
       user.messages.push(req.body.message);

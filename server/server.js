@@ -55,7 +55,7 @@ passport.use(new GoogleStrategy({
     callbackURL: process.env.callbackURL || "http://localhost:3000/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    var promise = User.findOne({ id: profile.id }).exec();
+    var promise = User.findOne({ name: profile.name }).exec();
     promise.then(function(user) {
       if(user){
         return user
@@ -111,6 +111,55 @@ io.sockets.on('connection', function(socket) {
     io.sockets.emit('new message', {msg: data.message, user: data.user})
   });
 
+});
+
+
+var irc = require("tmi.js");
+
+var options = {
+  options: {
+    debug: true
+  },
+  connection: {
+    cluster: "aws",
+    reconnect: true
+  },
+  identity: {
+    username: "YOURSTREAM",
+    password: process.env.TWITCH_TOKEN
+  },
+  channels: ["savjz"]
+};
+var client = new irc.client(options);
+client.connect();
+
+client.on("chat", function (channel, user, message, self) {
+  //Do something based on the message
+  var username = JSON.stringify(user.username);
+  var message = JSON.stringify(message);
+  var promise = User.findOne({"name": username}).exec();
+
+  promise.then(function(chatter){
+    if(chatter){
+      console.log("Shouldn't be here alot");
+      chatter.messages.push(message);
+      chatter.markModified('messages');
+      return chatter.save();
+    }
+    var newChatter = new User({
+      name: username,
+      messages: []
+    });
+    newChatter.messages.push(message);
+    newChatter.markModified('messages');
+    return newChatter.save();
+  })
+  .then(function(saved){
+    console.log("%s by %s is saved", message, saved.name);
+  })
+  .catch(function(err){
+    console.log(err);
+  });
 });
 
 // module.exports = app;

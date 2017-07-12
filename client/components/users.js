@@ -26,9 +26,9 @@ export default class Users extends React.Component {
     });
   }
 
-  handleSubmit(userId){
+  handleSubmit(userName){
     for(var j = 0; j < this.state.userData.length; j++){
-      if(this.state.userData[j].id === userId){
+      if(this.state.userData[j].name === userName){
         this.setState({
           userMessages: this.state.userData[j].messages
         });
@@ -46,7 +46,7 @@ export default class Users extends React.Component {
                 <h3 style={sideStyle}><strong>Users</strong></h3>
                 {this.state.userData.map((user,idx) => (
                   <div style={sideStyle} key={idx}>
-                    <button className="btn col-md-12" onClick={this.handleSubmit.bind(this, user.id)}>
+                    <button className="btn col-md-12" onClick={this.handleSubmit.bind(this, user.name)}>
                       {user.name}
                     </button>
                   </div>))}
