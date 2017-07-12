@@ -55,7 +55,7 @@ passport.use(new GoogleStrategy({
     callbackURL: process.env.callbackURL || "http://localhost:3000/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    var promise = User.findOne({ name: profile.name }).exec();
+    var promise = User.findOne({ id: profile.id }).exec();
     promise.then(function(user) {
       if(user){
         return user
@@ -90,32 +90,9 @@ app.use(function(err,req,res,next){
   res.status(err.status || 500);
 });
 
-//Sockets and Server
-var port = process.env.PORT || 8000;
-var server = app.listen(port);
-var io = require('socket.io').listen(server);
-var connections = [];
-
-io.sockets.on('connection', function(socket) {
-  connections.push(socket);
-  console.log("Connected: %s sockets connected", connections.length);
-
-  //Disconnect
-  socket.on('disconnect', function(data) {
-    connections.splice(connections.indexOf(socket), 1);
-    console.log('Disconnect: %s sockets connected', connections.length);
-  });
-
-  //Send message
-  socket.on('send message', function(data) {
-    io.sockets.emit('new message', {msg: data.message, user: data.user})
-  });
-
-});
-
-
+//Twitch chat irc
 var irc = require("tmi.js");
-
+var mainChannel = "bmkibler";
 var options = {
   options: {
     debug: true
@@ -128,20 +105,24 @@ var options = {
     username: "YOURSTREAM",
     password: process.env.TWITCH_TOKEN
   },
-  channels: ["savjz"]
+  channels: [mainChannel]
 };
 var client = new irc.client(options);
 client.connect();
 
+app.get('/updateChannel', function(req,res){
+  mainChannel = req.body.channel;
+  res.status(200).send("Success");
+})
+
 client.on("chat", function (channel, user, message, self) {
   //Do something based on the message
-  var username = JSON.stringify(user.username);
+  var username = user.username || JSON.stringify(user.username);
   var message = JSON.stringify(message);
   var promise = User.findOne({"name": username}).exec();
 
   promise.then(function(chatter){
     if(chatter){
-      console.log("Shouldn't be here alot");
       chatter.messages.push(message);
       chatter.markModified('messages');
       return chatter.save();
@@ -162,8 +143,32 @@ client.on("chat", function (channel, user, message, self) {
   });
 });
 
+//server
 // module.exports = app;
+var port = process.env.PORT || 8000;
+app.listen(port,  function() {
+  console.log("Running on port: %s", port);
+});
+
+//Sockets and Server
 // var port = process.env.PORT || 8000;
-// app.listen(port,  function() {
-//   console.log("Running on port: %s", port);
+// var server = app.listen(port);
+// var io = require('socket.io').listen(server);
+// var connections = [];
+//
+// io.sockets.on('connection', function(socket) {
+//   connections.push(socket);
+//   console.log("Connected: %s sockets connected", connections.length);
+//
+//   //Disconnect
+//   socket.on('disconnect', function(data) {
+//     connections.splice(connections.indexOf(socket), 1);
+//     console.log('Disconnect: %s sockets connected', connections.length);
+//   });
+//
+//   //Send message
+//   socket.on('send message', function(data) {
+//     io.sockets.emit('new message', {msg: data.message, user: data.user})
+//   });
+//
 // });

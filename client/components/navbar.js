@@ -41,7 +41,9 @@ export default class Navbar extends React.Component {
             <span className='icon-bar'></span>
             <span className='icon-bar'></span>
           </button>
-          <div className='navbar-brand' style={brandStyle}><strong>Stream</strong></div>
+          <Link to='/' className='navbar-brand'>
+            <div style={brandStyle}><strong>Stream</strong></div>
+          </Link>
         </div>
 
         <div id='navbar' className='navbar-collapse collapse' style={loginStyle}>
@@ -54,7 +56,7 @@ export default class Navbar extends React.Component {
                 <Link to='/'>Home</Link>
               </li>
               <li>
-                <Link to='/users'>Users</Link>
+                <Link to='/users'>Messages</Link>
               </li>
               <li>
                 <a href="/logout">Logout</a>
@@ -68,7 +70,8 @@ export default class Navbar extends React.Component {
 
 var brandStyle = {
   fontSize:"24px",
-  paddingLeft:"50px"
+  paddingLeft:"50px",
+  color:"red"
 };
 
 var loginStyle = {
