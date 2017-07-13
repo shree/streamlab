@@ -82,14 +82,6 @@ app.get('/auth/google/callback',
     res.redirect('/');
 });
 
-//Routes
-app.use('/', indexRoutes);
-
-//Error Handling for other requests
-app.use(function(err,req,res,next){
-  res.status(err.status || 500);
-});
-
 //Twitch chat irc
 var irc = require("tmi.js");
 var mainChannel = "savjz";
@@ -157,9 +149,17 @@ function clientSocket(options) {
   });
 };
 
+//Routes
+app.use('/', indexRoutes);
+
 //For all routes Location matters
 app.get('/*', function(req,res) {
   res.sendFile(path.join(__dirname, '../../client/index.html'));
+});
+
+//Error Handling for other requests
+app.use(function(err,req,res,next){
+  res.status(err.status || 500);
 });
 
 //server
