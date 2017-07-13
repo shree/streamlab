@@ -7,7 +7,7 @@ export default class Home extends React.Component {
       message: "",
       chat: [],
       user: this.props.user,
-      channel: "bmkibler",
+      channel: "savjz",
       query: ""
     }
     this.handleChange = this.handleChange.bind(this);
@@ -30,22 +30,34 @@ export default class Home extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     var channel = this.state.query;
-    this.setState({
-      channel: channel,
-      query: ""
-    });
 
     $.ajax({
       url:"/updateChannel",
       data: {
-        channel : this.state.channel
+        channel : channel
       }
     })
     .then((data)=> {
-      // console.log("Getting messages from %s",this.state.channel);
+      return $.ajax({
+        url:"/connectChannel",
+        data: {
+          channel : channel
+        }
+      });
+    })
+    .then((data)=>{
+      console.log("Getting messages from %s",data);
+      this.setState({
+        channel: channel,
+        query: ""
+      });
     })
     .fail(()=>{
       console.log("Backend did not update");
+      this.setState({
+        channel: channel,
+        query: ""
+      });
     })
   }
 

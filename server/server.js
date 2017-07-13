@@ -92,7 +92,7 @@ app.use(function(err,req,res,next){
 
 //Twitch chat irc
 var irc = require("tmi.js");
-var mainChannel = "bmkibler";
+var mainChannel = "savjz";
 var options = {
   options: {
     debug: true
@@ -107,41 +107,58 @@ var options = {
   },
   channels: [mainChannel]
 };
-var client = new irc.client(options);
-client.connect();
+var client;
+clientSocket(options);
 
 app.get('/updateChannel', function(req,res){
-  mainChannel = req.body.channel;
-  res.status(200).send("Success");
-})
-
-client.on("chat", function (channel, user, message, self) {
-  //Do something based on the message
-  var username = user.username || JSON.stringify(user.username);
-  var message = JSON.stringify(message);
-  var promise = User.findOne({"name": username}).exec();
-
-  promise.then(function(chatter){
-    if(chatter){
-      chatter.messages.push(message);
-      chatter.markModified('messages');
-      return chatter.save();
-    }
-    var newChatter = new User({
-      name: username,
-      messages: []
-    });
-    newChatter.messages.push(message);
-    newChatter.markModified('messages');
-    return newChatter.save();
-  })
-  .then(function(saved){
-    console.log("%s by %s is saved", message, saved.name);
-  })
-  .catch(function(err){
-    console.log(err);
-  });
+  mainChannel = req.query.channel;
+  options.channels.push(mainChannel);
+  console.log("1.%s", mainChannel);
+  client.disconnect();
+  console.log("Disconnected");
+  res.status(200).send(mainChannel);
 });
+
+app.get('/connectChannel', function(req,res){
+  client = new irc.client(options);
+  console.log("Options: %s",options.channels[0]);
+  console.log("2.%s", mainChannel);
+  clientSocket(options);
+  console.log("Connected to: %s", mainChannel);
+  res.status(200).send(mainChannel);
+});
+
+function clientSocket(options) {
+  client = new irc.client(options);
+  client.connect();
+  client.on("chat", function (channel, user, message, self) {
+    //Do something based on the message
+    var username = user.username || JSON.stringify(user.username);
+    var message = JSON.stringify(message);
+    var promise = User.findOne({"name": username}).exec();
+
+    promise.then(function(chatter){
+      if(chatter){
+        chatter.messages.push(message);
+        chatter.markModified('messages');
+        return chatter.save();
+      }
+      var newChatter = new User({
+        name: username,
+        messages: []
+      });
+      newChatter.messages.push(message);
+      newChatter.markModified('messages');
+      return newChatter.save();
+    })
+    .then(function(saved){
+      console.log("%s by %s is saved", message, saved.name);
+    })
+    .catch(function(err){
+      console.log(err);
+    });
+  });
+};
 
 //server
 // module.exports = app;
