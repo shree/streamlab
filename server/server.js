@@ -152,14 +152,14 @@ function clientSocket(options) {
   });
 };
 
-//Error Handling for other requests
-// app.use(function(err,req,res,next){
-//   res.status(err.status || 500);
-// });
-
 //For all routes Location matters
 app.get('/*', function(req,res) {
   res.sendFile(path.join(__dirname, '../client/index.html'));
+});
+
+//Error Handling for other requests
+app.use(function(err,req,res,next){
+  res.status(err.status || 500);
 });
 
 //server
