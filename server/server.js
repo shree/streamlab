@@ -113,16 +113,12 @@ clientSocket(options);
 app.get('/updateChannel', function(req,res){
   mainChannel = req.query.channel;
   options.channels.push(mainChannel);
-  console.log("1.%s", mainChannel);
   client.disconnect();
-  console.log("Disconnected");
   res.status(200).send(mainChannel);
 });
 
 app.get('/connectChannel', function(req,res){
   client = new irc.client(options);
-  console.log("Options: %s",options.channels[0]);
-  console.log("2.%s", mainChannel);
   clientSocket(options);
   console.log("Connected to: %s", mainChannel);
   res.status(200).send(mainChannel);
