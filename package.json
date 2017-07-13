@@ -11,7 +11,7 @@
     "postinstall": "webpack --config webpack.config.js -p --progress --colors"
   },
   "engines": {
-    "node": "8.1.3"
+    "node": "8.1.4"
   },
   "author": "Shree",
   "license": "MIT",
@@ -33,6 +33,6 @@
     "react-router-dom": "^4.1.1",
     "socket.io": "^2.0.3",
     "tmi.js": "^1.2.1",
-    "webpack": "^3.1.0"
+    "webpack": "^3.2.0"
   }
 }
