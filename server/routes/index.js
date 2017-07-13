@@ -2,10 +2,6 @@ var path = require('path');
 var router = require('express').Router();
 var User = require("../models/user");
 
-router.get('/', function(req,res) {
-  res.sendFile(path.join(__dirname, '../../client/index.html'));
-});
-
 //Get user info if logged in
 router.get('/checkLogin', function(req,res) {
   if(req.user) {
@@ -47,6 +43,11 @@ router.get('/logout', function(req, res){
   req.session.destroy(function (err) {
     res.redirect('/'); //Inside a callback… bulletproof!
   });
+});
+
+//For all routes? Location matters
+router.get('/*', function(req,res) {
+  res.sendFile(path.join(__dirname, '../../client/index.html'));
 });
 
 module.exports = router;
