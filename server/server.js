@@ -156,6 +156,11 @@ function clientSocket(options) {
   });
 };
 
+//For all routes Location matters
+app.get('/*', function(req,res) {
+  res.sendFile(path.join(__dirname, '../../client/index.html'));
+});
+
 //server
 // module.exports = app;
 var port = process.env.PORT || 8000;
