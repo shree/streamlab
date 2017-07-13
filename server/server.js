@@ -129,7 +129,8 @@ function clientSocket(options) {
   client.connect();
   client.on("chat", function (channel, user, message, self) {
     //Do something based on the message
-    var username = user.username || JSON.stringify(user.username);
+    var username = JSON.stringify(user.username);
+    username = username.replace(/^"|"$/g, '');
     var message = JSON.stringify(message);
     var promise = User.findOne({"name": username}).exec();
 
