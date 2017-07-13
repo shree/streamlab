@@ -56,7 +56,7 @@ export default class Users extends React.Component {
     });
     var found = false;
     for(var i = 0; i < this.state.userData.length; i++){
-      if(this.state.userData[i].name === this.state.query){
+      if(this.state.userData[i].name === this.state.query.toLowerCase()){
         this.setState({
           userMessages: this.state.userData[i].messages,
           user: this.state.userData[i].name,
